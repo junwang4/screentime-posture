@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:text="@string/category_train"
+        android:id="@+id/train"
+        style="@style/CategoryStyle"
+        android:onClick="goTrain"
+        android:background="@color/category_train"
+        android:layout_width="match_parent" />
+
+    <TextView
+        android:text="@string/category_test"
+        android:id="@+id/test"
+        style="@style/CategoryStyle"
+        android:background="@color/category_test"
+        android:onClick="goTest" />
+
+    <TextView
+        android:text="@string/category_deploy"
+        style="@style/CategoryStyle"
+        android:background="@color/category_deploy"
+        android:onClick="goDeploy" />
+
+
+</LinearLayout>

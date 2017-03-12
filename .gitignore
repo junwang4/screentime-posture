@@ -1,0 +1,8 @@
+webserver
+misc
+data_analysis
+build
+gradle
+.idea
+.gradle
+.ipy*

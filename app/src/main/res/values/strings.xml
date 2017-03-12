@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Screentime Posture Reminder</string>
+    <string name="category_train">Collect data</string>
+    <string name="category_test">Test how good the algorithm</string>
+    <string name="category_deploy">Deploy</string>
+
+    <string name="posture_prompt">Choose a posture</string>
+
+    <string-array name="posture_array">
+        <item>For test</item>
+        <item>On toilet</item>
+        <item>Stand slouch</item>
+        <item>Stand straight</item>
+        <item>Sit straight</item>
+        <item>Sit slouch</item>
+        <item>Lie in bed</item>
+    </string-array>
+
+</resources>
