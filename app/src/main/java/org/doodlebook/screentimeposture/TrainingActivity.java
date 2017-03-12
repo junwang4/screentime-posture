@@ -48,16 +48,6 @@ public class TrainingActivity extends AppCompatActivity implements OnItemSelecte
         sensorGyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        MyUtil.posture_choice = parent.getItemAtPosition(position).toString();
-        Toast.makeText(parent.getContext(), "Selected: " + MyUtil.posture_choice, Toast.LENGTH_LONG).show();
-        vStatus.setText("");
-    }
-
-    public void onNothingSelected(AdapterView<?> arg0) {
-        // TODO Auto-generated method stub
-    }
 
 
     public static StringBuilder data;
