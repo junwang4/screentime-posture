@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,20 +26,17 @@ import java.util.concurrent.TimeUnit;
 import android.app.usage.UsageStatsManager;
 import android.app.usage.UsageStats;
 
-public class TrainingActivity extends AppCompatActivity implements OnItemSelectedListener {
+public class TrainingActivity extends AppCompatActivity {
 
     static TextView vStatus;
     MyUtil myUtil = new MyUtil(this);
-    SensorManager sensorManager;
-    private Sensor sensorAccelerometer, sensorMagnetic, sensorGyro;
+    static SensorManager sensorManager;
+    private static Sensor sensorAccelerometer, sensorMagnetic, sensorGyro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(org.doodlebook.screentimeposture.R.layout.activity_training);
-
-        Spinner spinner = (Spinner) findViewById(org.doodlebook.screentimeposture.R.id.spinner);
-        spinner.setOnItemSelectedListener(this);
 
         vStatus = (TextView) findViewById(org.doodlebook.screentimeposture.R.id.textViewStatus);
 
@@ -49,14 +47,13 @@ public class TrainingActivity extends AppCompatActivity implements OnItemSelecte
     }
 
 
-
     public static StringBuilder data;
-    HashMap<Integer, Long> sensorPrevmillis = new HashMap<Integer, Long>();
-    HashMap<Integer, String> sensorTypeName = new HashMap<Integer, String>();
+    static HashMap<Integer, Long> sensorPrevmillis = new HashMap<Integer, Long>();
+    static HashMap<Integer, String> sensorTypeName = new HashMap<Integer, String>();
+    static SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm:ss");
+    public static String PHONE_INFO = Build.MANUFACTURER + " " + Build.MODEL + " " + Build.VERSION.RELEASE + " " + Build.VERSION_CODES.class.getFields()[android.os.Build.VERSION.SDK_INT].getName();
 
-    SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm:ss");
-
-    SensorEventListener sensorEventListener = new SensorEventListener() {
+    static SensorEventListener sensorEventListener = new SensorEventListener() {
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
         }
 
@@ -68,7 +65,7 @@ public class TrainingActivity extends AppCompatActivity implements OnItemSelecte
             sensorPrevmillis.put(sensorType, curr_millis);
 
             float[] xyz = event.values;
-            String record = MyUtil.posture_choice + "," + myUtil.PHONE_INFO
+            String record = MyUtil.posture_choice + "," + PHONE_INFO
                     + "," + curr_millis + "," + formatter.format(new Date())
                     + "," + sensorType + "," + sensorTypeName.get(sensorType)
                     + "," + xyz[0] + "," + xyz[1] + "," + xyz[2] + "\n";
@@ -78,38 +75,42 @@ public class TrainingActivity extends AppCompatActivity implements OnItemSelecte
         }
     };
 
-
-    public void startObtainPostureData(View view) {
-        sensorManager.registerListener(sensorEventListener, sensorAccelerometer, 20000000);
-        sensorManager.registerListener(sensorEventListener, sensorMagnetic, 20000000);
-        sensorManager.registerListener(sensorEventListener, sensorGyro, 20000000);
-
-        long prev_millis = System.currentTimeMillis();
-        sensorPrevmillis.put(Sensor.TYPE_ACCELEROMETER, prev_millis);
-        sensorPrevmillis.put(Sensor.TYPE_GYROSCOPE, prev_millis);
-        sensorPrevmillis.put(Sensor.TYPE_MAGNETIC_FIELD, prev_millis);
-
-        sensorTypeName.put(Sensor.TYPE_ACCELEROMETER, "ACC");
-        sensorTypeName.put(Sensor.TYPE_GYROSCOPE, "GYRO");
-        sensorTypeName.put(Sensor.TYPE_MAGNETIC_FIELD, "MAGNET");
-
-        //sensorManager.registerListener(sel, (Sensor) sensorList.get(0), SensorManager.SENSOR_DELAY_NORMAL);
-        // see: http://stackoverflow.com/questions/16783325/android-user-defined-delay-is-used-in-registerlistener-not-working-why
-        //     public static final int SENSOR_DELAY_FASTEST = 0;
-        //     public static final int SENSOR_DELAY_GAME = 1;
-        //     public static final int SENSOR_DELAY_UI = 2;
-        //     public static final int SENSOR_DELAY_NORMAL = 3; // 200000ms rate (default) suitable for screen orientation changes
-        // So as long as your value is not 0,1,3 then you will be ok and yours should be used.
-
-        data = new StringBuilder();
+    public void startMyService(View view) {
+        MyService.scheduleRepeat(view.getContext());
     }
-
-    public void stopObtainData(View view) {
+    public void stopMyService(View view) {
+        MyService.cancelRepeat(view.getContext());
         sensorManager.unregisterListener(sensorEventListener);
+        isSensorRegistered = false;
     }
 
-    public void saveData(View view) {
-        String task = "train";
+    public static boolean isSensorRegistered = false;
+    public static void getAppUsageAndSensorData() {
+        if (! isSensorRegistered) {
+            sensorManager.registerListener(sensorEventListener, sensorAccelerometer, 20000000);
+            sensorManager.registerListener(sensorEventListener, sensorMagnetic, 20000000);
+            sensorManager.registerListener(sensorEventListener, sensorGyro, 20000000);
+
+            long prev_millis = System.currentTimeMillis();
+            sensorPrevmillis.put(Sensor.TYPE_ACCELEROMETER, prev_millis);
+            sensorPrevmillis.put(Sensor.TYPE_GYROSCOPE, prev_millis);
+            sensorPrevmillis.put(Sensor.TYPE_MAGNETIC_FIELD, prev_millis);
+
+            sensorTypeName.put(Sensor.TYPE_ACCELEROMETER, "ACC");
+            sensorTypeName.put(Sensor.TYPE_GYROSCOPE, "GYRO");
+            sensorTypeName.put(Sensor.TYPE_MAGNETIC_FIELD, "MAGNET");
+
+            isSensorRegistered = true;
+            data = new StringBuilder();
+        } else {
+            sensorManager.unregisterListener(sensorEventListener);
+            isSensorRegistered = false;
+            //saveData();
+        }
+    }
+
+    public void saveData() {
+        String task = "service";
         try {
             String fname;
             fname = "posture_" + task + ".csv";
@@ -121,7 +122,7 @@ public class TrainingActivity extends AppCompatActivity implements OnItemSelecte
             e.printStackTrace();
             Log.i("failed to save data", "");
         }
-
+/*
         Boolean saveToWebServer = true;
 //        Boolean saveToWebServer = false;
         if (saveToWebServer) {
@@ -138,24 +139,10 @@ public class TrainingActivity extends AppCompatActivity implements OnItemSelecte
                         }
                     });
         }
+        */
     }
 
 
-    public void learnPattern(View view) {
-
-        myUtil.sendDataToWebServer("", "train_model", "",
-                new MyUtil.VolleyCallback() {
-                    @Override
-                    public void onSuccess(String result) {
-                        vStatus.setText(result);
-                    }
-
-                    public void onError(String result) {
-                        vStatus.setText("Error: " + result);
-                    }
-                });
-
-    }
 
     public void clickAppRecentTask(View view) {
         vStatus.setText(getAppUsageStats());

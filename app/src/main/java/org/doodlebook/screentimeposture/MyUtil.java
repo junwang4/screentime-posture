@@ -1,6 +1,7 @@
 package org.doodlebook.screentimeposture;
 
 import android.content.Context;
+import android.hardware.Sensor;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -23,8 +24,6 @@ import java.util.Map;
 
 
 public class MyUtil {
-
-    public static String PHONE_INFO = Build.MANUFACTURER + " " + Build.MODEL + " " + Build.VERSION.RELEASE + " " + Build.VERSION_CODES.class.getFields()[android.os.Build.VERSION.SDK_INT].getName();
 
     public static String posture_choice = "For test";
     public static final String SERVER_URL = "http://192.168.1.178:5000/api";

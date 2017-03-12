@@ -30,7 +30,6 @@ public class MyService extends GcmTaskService {
     @Override
     public int onRunTask(TaskParams taskParams) {
         //do some stuff (mostly network) - executed in background thread (async)
-
         //obtain your data
         Bundle extras = taskParams.getExtras();
 
@@ -40,10 +39,12 @@ public class MyService extends GcmTaskService {
             h.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(MyService.this, "Scan wifi signal executed", Toast.LENGTH_LONG).show();
-                    String task = "track";
-                    String data = myUtil.scanWifi(task);
-                    myUtil.sendDataToWebServer(task, "wifi_signal", data,
+                    Toast.makeText(MyService.this, "onRunTask executed", Toast.LENGTH_LONG).show();
+                    //String task = "service";
+                    //String data = myUtil.scanWifi(task);
+                    TrainingActivity.getAppUsageAndSensorData();
+                    /*
+                    myUtil.sendDataToWebServer(task, "posture_xyz", data,
                             new MyUtil.VolleyCallback() {
                                 @Override
                                 public void onSuccess(String result){
@@ -53,6 +54,7 @@ public class MyService extends GcmTaskService {
                                     //vStatus.setText("Error: " + result);
                                 }
                             });
+                            */
 
                 }
             });

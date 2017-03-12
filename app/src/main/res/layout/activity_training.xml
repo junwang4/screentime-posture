@@ -17,14 +17,14 @@
 
     <Button
         android:text="启动后台运行"
-        android:onClick="startBackgroundService"
+        android:onClick="startMyService"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/buttonStart" />
 
     <Button
         android:text="停止运行"
-        android:onClick="stopBackgroundService"
+        android:onClick="stopMyService"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/buttonStop" />
