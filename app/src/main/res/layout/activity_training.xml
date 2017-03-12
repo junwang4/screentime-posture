@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_training"
     android:layout_width="match_parent"
@@ -8,80 +9,84 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:columnCount="3"
+    android:rowCount="6"
+    android:orientation="horizontal"
     tools:context=".TrainingActivity">
-    
-    <TextView
-        android:text="STEP 1: Choose a posture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:id="@+id/textViewStep1" />
 
-    <Spinner
-        android:layout_below="@+id/textViewStep1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:entries="@array/posture_array"
-        android:prompt="@string/posture_prompt"
-        android:id="@+id/spinner" />
-
-    <TextView
-        android:text="STEP 2: Start to use your phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/spinner"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="11dp"
-        android:id="@+id/textView3" />
 
     <Button
-        android:text="Start obtain posture data"
-        android:onClick="startObtainPostureData"
+        android:text="启动后台运行"
+        android:onClick="startBackgroundService"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
-        android:layout_marginTop="9dp"
         android:id="@+id/buttonStart" />
 
-    <TextView
-        android:text="..."
-        android:textSize="11dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonStart"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="3dp"
-        android:id="@+id/textViewStatus" />
-
     <Button
-        android:text="Done with obtaining data"
-        android:onClick="stopObtainData"
+        android:text="停止运行"
+        android:onClick="stopBackgroundService"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewStatus"
-        android:layout_marginTop="9dp"
         android:id="@+id/buttonStop" />
+
 
     <Button
         android:text="Save data"
         android:onClick="saveData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonStop"
-        android:layout_marginTop="9dp"
         android:id="@+id/buttonSaveData" />
+
+    <Space
+        android:layout_marginTop="20dp"
+        android:layout_columnSpan="3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:text="站着用手机"
+        android:onClick="clickSituationStanding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:text="坐在椅子上"
+        android:onClick="clickSituationChair"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:text="坐在沙发上"
+        android:onClick="clickSituationSofa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
     <Button
-        android:text="app recent task test..."
-        android:onClick="clickAppRecentTask"
+        android:text="躺在床上"
+        android:onClick="clickSituationBed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:text="哈哈，在WC"
+        android:onClick="clickSituationToilet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:text="其它"
+        android:onClick="clickSituationOthers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="..............................."
+        android:layout_columnSpan="3"
+        android:textSize="11dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonSaveData"
-        android:layout_marginTop="18dp"
-        android:id="@+id/button6" />
+        android:id="@+id/textViewStatus" />
 
-</RelativeLayout>
+
+</GridLayout>
