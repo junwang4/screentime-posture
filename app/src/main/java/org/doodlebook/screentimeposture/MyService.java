@@ -1,6 +1,12 @@
 package org.doodlebook.screentimeposture;
 
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -12,18 +18,23 @@ import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.google.android.gms.gcm.TaskParams;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 public class MyService extends GcmTaskService {
 
     private static final String TAG = MyService.class.getSimpleName();
-
-    public static final String GCM_ONEOFF_TAG = "oneoff|[0,0]";
     public static final String GCM_REPEAT_TAG = "repeat|[7200,1800]";
+
     MyUtil myUtil = new MyUtil(this);
+
 
     @Override
     public void onInitializeTasks() {
-        //called when app is updated to a new version, reinstalled etc.
-        //you have to schedule your repeating tasks again
+        // called when app is updated to a new version, reinstalled etc.
+        // you have to schedule your repeating tasks again
         super.onInitializeTasks();
     }
 
@@ -40,9 +51,10 @@ public class MyService extends GcmTaskService {
                 @Override
                 public void run() {
                     Toast.makeText(MyService.this, "onRunTask executed", Toast.LENGTH_LONG).show();
-                    //String task = "service";
-                    //String data = myUtil.scanWifi(task);
-                    TrainingActivity.getAppUsageAndSensorData();
+                    //String data = myUtil.scanWifi("train");
+
+                    MainActivity.getAppUsageAndSensorData();
+
                     /*
                     myUtil.sendDataToWebServer(task, "posture_xyz", data,
                             new MyUtil.VolleyCallback() {
@@ -63,9 +75,12 @@ public class MyService extends GcmTaskService {
     }
 
 
-    public static void scheduleRepeat(Context context) {
+    public void scheduleRepeat(Context context) {
+        //sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
         //in this method, single Repeating task is scheduled (the target service that will be called is MyTaskService.class)
         try {
+
             PeriodicTask periodic = new PeriodicTask.Builder()
                     //specify target service - must extend GcmTaskService
                     .setService(MyService.class)
@@ -85,7 +100,7 @@ public class MyService extends GcmTaskService {
                     .build();
             GcmNetworkManager.getInstance(context).schedule(periodic);
             Log.v(TAG, "repeating task scheduled");
-            Toast.makeText(context, "Start the repeating track task", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Start the background service", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Log.e(TAG, "scheduling failed");
             e.printStackTrace();
@@ -93,12 +108,14 @@ public class MyService extends GcmTaskService {
     }
 
 
-    public static void cancelRepeat(Context context) {
+    public void cancelRepeat(Context context) {
         GcmNetworkManager
                 .getInstance(context)
                 .cancelTask(GCM_REPEAT_TAG, MyService.class);
 
-        Toast.makeText(context, "Stop the repeating track task", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Stop the background service", Toast.LENGTH_LONG).show();
     }
+
+
 
 }

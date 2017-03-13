@@ -2,6 +2,9 @@ package org.doodlebook.screentimeposture;
 
 import android.content.Context;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -28,18 +31,53 @@ public class MyUtil {
     public static String posture_choice = "For test";
     public static final String SERVER_URL = "http://192.168.1.178:5000/api";
     //public static final String SERVER_URL = "http://128.230.146.72:8080/api";  // textmining
-
+    public static String PHONE_INFO = Build.MANUFACTURER + " " + Build.MODEL + " " + Build.VERSION.RELEASE + " " + Build.VERSION_CODES.class.getFields()[android.os.Build.VERSION.SDK_INT].getName();
 
 
     private Context context;
+
 
     public MyUtil(Context context) {
         this.context = context;
     }
 
-    public String getSensorXYZ(String task) {
-        return("");
+    static SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm:ss");
+    public StringBuilder data;
+
+
+
+    public void saveData() {
+        String task = "service";
+        try {
+            String fname;
+            fname = "posture_" + task + ".csv";
+            FileOutputStream fOut = this.context.openFileOutput(fname, Context.MODE_PRIVATE | Context.MODE_APPEND);
+            fOut.write(data.toString().getBytes());
+            fOut.close();
+            Log.i("successful saving: ", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.i("failed to save data", "");
+        }
+
+        Boolean saveToWebServer = true;
+//        Boolean saveToWebServer = false;
+        if (saveToWebServer) {
+            String data_type = "posture_xyz";
+            sendDataToWebServer(task, data_type, data.toString(),
+                    new MyUtil.VolleyCallback() {
+                        @Override
+                        public void onSuccess(String result) {
+                            MainActivity.vStatus.setText(result);
+                        }
+
+                        public void onError(String result) {
+                            MainActivity.vStatus.setText("Error: " + result);
+                        }
+                    });
+        }
     }
+
 
 
     public String scanWifi(String task) {
@@ -125,8 +163,7 @@ public class MyUtil {
         requestQueue.add(stringRequest);
     }
 
-    SimpleDateFormat formatter = new SimpleDateFormat("MM-dd hh:mm:ss a");
-    public String millisToTimeString(long millis) {
+    public static String millisToTimeString(long millis) {
         Timestamp timestamp = new Timestamp(millis);
         long ts = timestamp.getTime();
         Date date = new Date(ts);
