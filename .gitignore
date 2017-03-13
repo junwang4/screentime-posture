@@ -6,5 +6,11 @@ gradle
 .idea
 .gradle
 .ipy*
-gradle*
-*.gradle
+
+build.gradle
+gradle.properties
+gradlew
+gradlew.bat
+local.properties
+screentime-posture.iml
+settings.gradle
