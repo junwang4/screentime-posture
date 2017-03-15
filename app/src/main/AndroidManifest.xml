@@ -7,7 +7,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission xmlns:tools="http://schemas.android.com/tools" android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
 
-    <application
+    <application android:name=".MyApp"
+
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Screentime Posture Reminder"

@@ -36,7 +36,6 @@ public class MyService extends GcmTaskService {
     private static final String TAG = MyService.class.getSimpleName();
     public static final String GCM_REPEAT_TAG = "repeat|[7200,1800]";
 
-
     @Override
     public void onInitializeTasks() {
         // called when app is updated to a new version, reinstalled etc.
@@ -108,6 +107,8 @@ public class MyService extends GcmTaskService {
 
 
     private String getAppUsageStats() {
+        MainActivity.setupResourceAndServices();
+
         List<UsageStats> usageStatsList =
                 MainActivity.usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY,
                         System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(5),
@@ -137,6 +138,7 @@ public class MyService extends GcmTaskService {
         else {
             MainActivity.unRegisterSensorListener();
             Toast.makeText(MyService.this,  "unregister listener", Toast.LENGTH_LONG).show();
+            Log.i("info", "unregister listener");
         }
 
         return stringBuilder.toString();

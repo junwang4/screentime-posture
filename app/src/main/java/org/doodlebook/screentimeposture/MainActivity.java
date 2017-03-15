@@ -62,6 +62,18 @@ public class MainActivity extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(getApplicationContext());
     }
 
+    public static void setupResourceAndServices() {
+        Context c = MyApp.getContext();
+        sensorManager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
+        sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorMagnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        sensorGyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+
+        usageStatsManager = (UsageStatsManager) c.getSystemService(Context.USAGE_STATS_SERVICE);
+        requestQueue = Volley.newRequestQueue(c);
+        //vStatus = (TextView) findViewById(org.doodlebook.screentimeposture.R.id.textViewStatus);
+    }
+
     public void startMyService(View view) {
         myService.scheduleRepeat(view.getContext());
     }
@@ -75,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public static void registerSensorListener() {
         sensorManager.registerListener(sensorEventListener, sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        MainActivity.vStatus.setText("registerSensorListener " + MyUtil.formatter.format(new Date()));
+        //MainActivity.vStatus.setText("registerSensorListener " + MyUtil.formatter.format(new Date()));
 
         long prev_millis = System.currentTimeMillis();
         sensorPrevmillis.put(Sensor.TYPE_ACCELEROMETER, prev_millis);
@@ -108,7 +120,8 @@ public class MainActivity extends AppCompatActivity {
                     + "," + sensorType + "," + sensorTypeName.get(sensorType)
                     + "," + xyz[0] + "," + xyz[1] + "," + xyz[2] + "\n";
 
-            MainActivity.vStatus.setText(++listenCount + "   \n" + record);
+            //MainActivity.vStatus.setText(++listenCount + "   \n" + record);
+            Log.i("info", ++listenCount + "   \n" + record);
             data.append(record);
             if (listenCount % 5 == 0)
                 saveData();
@@ -121,10 +134,11 @@ public class MainActivity extends AppCompatActivity {
             new MyUtil.VolleyCallback() {
                 @Override
                 public void onSuccess(String result){
-                    MainActivity.vStatus.setText(result);
+                    //MainActivity.vStatus.setText(result);
+                    Log.i("from server", result);
                 }
                 public void onError(String result){
-                    MainActivity.vStatus.setText("Error: " + result);
+                    //MainActivity.vStatus.setText("Error: " + result);
                 }
             });
     }
