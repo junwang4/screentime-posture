@@ -61,6 +61,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <Space
+        android:layout_marginTop="20dp"
+        android:layout_columnSpan="3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <Button
         android:text="躺在床上"
